@@ -17,6 +17,7 @@ const upload = multer({ dest: 'uploads/' });
 const fs = require('fs');
 const csv = require('csv-parser');
 const expenseApi = require('./expense/index');
+const productApi = require('./product/index');
 
 // mounting routes on api
 const {
@@ -310,6 +311,15 @@ v2Routes.patch('/tenant/expense/edit',requireTenantSignin,expenseApi.editExpense
 v2Routes.get('/tenant/expense/get', requireTenantSignin,expenseApi.getSingleExpense);
 v2Routes.get('/tenant/expense/getAll',requireTenantSignin, expenseApi.getAllExpense);
 v2Routes.delete('/tenant/expense/delete',requireTenantSignin,expenseApi.deleteExpense);
+
+
+// Product 
+
+v2Routes.post('/tenant/product/create',requireTenantSignin, productApi.createProduct );
+v2Routes.patch('/tenant/product/edit',requireTenantSignin,productApi.editProduct);
+v2Routes.get('/tenant/product/get', requireTenantSignin,productApi.getSingleProduct);
+v2Routes.get('/tenant/product/getAll',requireTenantSignin, productApi.getAllProduct);
+v2Routes.delete('/tenant/product/delete',requireTenantSignin,productApi.deleteProduct);
 
 // Today view filter
 v2Routes.get(

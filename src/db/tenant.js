@@ -70,6 +70,7 @@ const initTenantDbConnection = (DB_URL) => {
     require('../model/featureMap/schema');
     require('../model/draft/schema');
     require('../model/expense/schema');
+    require('../model/product/schema');
     return db;
   } catch (error) {
     console.log(`${server.server_status} | initTenantDbConnection error`, error);

@@ -34,7 +34,7 @@
     "mongoose": "^5.13.7",
     "morgan": "^1.10.0",
     "multer": "^1.4.4",
-    "nodemon": "^2.0.20",
+    "nodemon": "^2.0.22",
     "shortid": "^2.2.16",
     "slugify": "^1.6.0",
     "uuid": "^8.3.2",

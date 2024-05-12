@@ -4,45 +4,39 @@ const logger = require('../../logger/index');
 const config = require('../../config/env.json');
 
 
-const createExpense = async (dbConnection, req) => {
+const createProduct = async (dbConnection, req) => {
   try {
-    logger.info(' [ Trigger createExpense service ] ');
-    const Expense = await dbConnection.model('Expense');
+    logger.info(' [ Trigger createProduct service ] ');
+    const Expense = await dbConnection.model('Product');
     let {
       name,
       amount,
       createdRole,
-      paymentType,
-      expenseDate
     } = req.body;
 
-      const newExpense = new Expense({  name, amount, createdRole,  paymentType, expenseDate,  story: 1 });
+      const newExpense = new Expense({  name, amount, createdRole,  story: 1 });
       await newExpense.save();
       return newExpense;
   } catch (error) {
-    logger.error(' [ Failed createExpense service ] ', error.message);
+    logger.error(' [ Failed createProduct service ] ', error.message);
     throw new Error(error.message);
   }
 };
 
-const editExpense = async (dbConnection, req) => {
+const editProduct = async (dbConnection, req) => {
   try {
-    logger.info(' [ Trigger newExpense service ] ');
-    const Expense = await dbConnection.model('Expense');
+    logger.info(' [ Trigger editProduct service ] ');
+    const Expense = await dbConnection.model('Product');
     let {
       name,
-      amount,
-      paymentType,
-      expenseDate
+      amount
     } = req.body;
     const newExpense = await Expense.findOneAndUpdate(
       { _id: req.body._id },
       {
         $set: {
           name,
-          amount,
-          paymentType,
-          expenseDate
+          amount
         },
       },
       { new: true }
@@ -57,10 +51,10 @@ const editExpense = async (dbConnection, req) => {
   }
 };
 
-const deleteExpense = async (dbConnection, req) => {
+const deleteProduct = async (dbConnection, req) => {
   try {
     logger.info(' [ Trigger deleteExpense service ] ');
-    const Expense = await dbConnection.model('Expense');
+    const Expense = await dbConnection.model('Product');
     const newExpense = await Expense.findOneAndUpdate(
       { _id: req.body._id },
       {
@@ -78,15 +72,15 @@ const deleteExpense = async (dbConnection, req) => {
   }
 };
 
-const getSingleExpense = async (dbConnection, req) => {
+const getSingleProduct = async (dbConnection, req) => {
   try {
     logger.info(' [ Trigger getSingleExpense service ] ');
-    const Expense = await dbConnection.model('Expense');
+    const Expense = await dbConnection.model('Product');
     const expenseFound = await Expense.findOne({
       _id: req.query._id,
       story: { $in: [1, 0, 2] },
     }).select(
-      '_id name amount  paymentType expenseDate createdRole'
+      '_id name amount createdRole'
     );
     if (expenseFound) return expenseFound;
     else throw new Error('Failed getSingleExpense');
@@ -96,25 +90,20 @@ const getSingleExpense = async (dbConnection, req) => {
   }
 };
 
-const getAllExpense = async (dbConnection, req) => {
+const getAllProduct= async (dbConnection, req) => {
   try {
     logger.info(' [ Trigger getAllExpense service ] ');
-    const Expense = await dbConnection.model('Expense');
-    var toDate =  `${new Date(req.query.toDate).getFullYear()}-${new Date(req.query.toDate).getMonth()+1}-${new Date(req.query.toDate).getDate() + 1}`;
+    const Product = await dbConnection.model('Product');
     var query = {
-      story: { $in: [1, 0, 2] },
-      // expenseDate: { $gte: new Date(req.query.fromDate), $lte: new Date(toDate) },
+      story: { $in: [1, 0, 2] }
     };
-    const expenseListFound = await Expense.aggregate([
+    const productListFound = await Product.aggregate([
       {
         $match:  query
       },
       { $sort: { expenseDate: -1 } },
     ]);
-    var totalExpense = expenseListFound.reduce((totalExpense, currentValue) => {
-      return totalExpense + parseInt(currentValue.amount);
-    }, 0);
-    if(expenseListFound) return { totalExpense: totalExpense, expenseListFound };
+    if(productListFound) return { productList: productListFound };
     else throw new Error('Failed getAllClient');
   } catch (error) {
     logger.error(' [ Failed getAllClient service ] ', error.message);
@@ -124,9 +113,9 @@ const getAllExpense = async (dbConnection, req) => {
 
 
 module.exports = {
-  createExpense,
-  editExpense,
-  deleteExpense,
-  getSingleExpense,
-  getAllExpense
+  createProduct,
+  editProduct,
+  deleteProduct,
+  getSingleProduct,
+  getAllProduct
 };
